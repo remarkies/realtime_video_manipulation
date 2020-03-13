@@ -1,2 +1,2 @@
 # virus
- video manipulation
+ video manipulation, WebRTC & Websocket
