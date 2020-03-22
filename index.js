@@ -4,22 +4,6 @@ var http = require('http').createServer(app);
 var path = require('path');
 var io = require('socket.io')(http);
 app.use(express.static('public'));
-const { ExpressPeerServer } = require('peer');
-
-//make express listen on port 9000
-const server = app.listen(9000);
-
-//peer-server options
-const options = {
-    debug: true,
-    path: '/peerjs'
-};
-
-//create peer-server
-const peerServer = ExpressPeerServer(server, options);
-
-//run peer-server with express
-app.use(options.path, peerServer);
 
 //make files accessible on /
 app.get('/', function(req, res){
