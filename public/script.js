@@ -1,11 +1,8 @@
-//import { doLoad } from './script.js';
-//doLoad();
-
 //establish connection to peer server
 //let peer = new Peer({host: 'nodejs', port: 9000, path: '/peerjs'});
 //let peer = new Peer({key: 'lwjd5qra8257b9'});
 let peer = new Peer(null, {
-    debug: true
+    debug: false
 });
 
 //establish WebSocket connection to server
@@ -78,7 +75,7 @@ peer.on('call', function(call) {
 });
 
 peer.on('error', function(err) {
-   console.log(err);
+    console.log(err);
     dataConnection = null;
 });
 
@@ -125,13 +122,17 @@ socket.on('hud update', function(hud) {
 
     //hud element 2
     $('#searchingUsers').text('Searching users: ' + hud.searchingUsers);
+
+    //hud element 3
+    $('#serverVersion').text('Server version: ' + hud.serverVersion);
 });
 
 //change gui due to connection closed
 function connectionClosed() {
     document.getElementById('triangle').style = "clip-path: polygon(90% 0%, 20% 100%, 100% 100%, 100% 0%); backdrop-filter: blur(10px)";
     document.getElementById('searchButton').style = "display: block;";
-    document.getElementById('remoteVideo').style = "display: none;"
+    document.getElementById('remoteVideo').style = "display: none;";
+    document.getElementById('remoteCanvas').style = "display: none;";
 }
 
 //change gui due to connection established
@@ -139,12 +140,12 @@ function connectionEstablished() {
     document.getElementById('triangle').style = "clip-path: polygon(0% 0, 0% 100%, 100% 100%, 100% 0%); backdrop-filter: blur(15px)";
     document.getElementById('searchButton').style = "display: none;";
     document.getElementById('loader').style = "display: none";
-    document.getElementById('remoteVideo').style = "display: flex;"
+    document.getElementById('remoteVideo').style = "display: flex;";
+    document.getElementById('remoteCanvas').style = "display: flex;";
 }
 
 //client pressed search
 function search() {
-
     //calls search function on socket server
     socket.emit('search', socket.id);
 
@@ -152,21 +153,16 @@ function search() {
 }
 
 function mediaCall(client) {
-    console.log('dataConnection.on mediaCall');
-    navigator.getUserMedia({video: true, audio: true}, function(stream) {
+    navigator.getUserMedia({video: true, audio: false}, function(stream) {
 
-        console.log('dataConnection.on beforePeerCall');
         let call = peer.call(client.peerId, stream);
-        console.log('dataConnection.on afterPeerCall');
 
         call.on('stream', function(remoteStream) {
-            console.log('dataConnection.on stream');
             remoteVideo.srcObject = remoteStream;
             remoteVideo.play();
         });
 
         call.on('close', function() {
-            console.log('dataConnection.on close');
             console.log('call closed');
         });
 

@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="main.css">
 </head>
-<body>
+<body onload="processor.doLoad()">
     <div id="content">
         <div id="key"></div>
     </div>
@@ -23,9 +23,11 @@
     <div id="hud">
         <div id="activeUsers"></div>
         <div id="searchingUsers"></div>
+        <div id="serverVersion"></div>
     </div>
-    <video id="remoteVideo"/>
-    <canvas id="remoteCanvas"/>
+    <video id="remoteVideo"></video>
+
+    <canvas id="remoteCanvas"></canvas>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>

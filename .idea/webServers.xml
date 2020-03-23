@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="445ba01c-7cde-433d-a226-034aa9f5a395" name="serverli" url="http://luka-kramer.ch">
+        <fileTransfer host="luka-kramer.ch" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/luc" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
