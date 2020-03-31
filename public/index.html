@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Socket.IO</title>
+    <title>Version 3.18</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="main.css">
@@ -10,25 +10,12 @@
     <div id="content">
         <div id="key"></div>
     </div>
-
     <div id="triangle"></div>
-    <button id="searchButton" type="button" onclick="search()">Search</button>
-
-    <div id="loader">
-        <div class="inner one"></div>
-        <div class="inner two"></div>
-        <div class="inner three"></div>
-    </div>
-
     <div id="hud">
-        <div id="activeUsers"></div>
-        <div id="searchingUsers"></div>
-        <div id="serverVersion"></div>
+        <div id="message"></div>
     </div>
     <video id="remoteVideo"></video>
-
     <canvas id="remoteCanvas"></canvas>
-
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.1.0/anime.min.js" integrity="sha256-98Q574VkbV+PkxXCKSgL6jVq9mrVbS7uCdA+vt0sLS8=" crossorigin="anonymous"></script>

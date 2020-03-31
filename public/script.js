@@ -1,9 +1,12 @@
+
 //establish connection to peer server
 //let peer = new Peer({host: 'nodejs', port: 9000, path: '/peerjs'});
 //let peer = new Peer({key: 'lwjd5qra8257b9'});
 let peer = new Peer(null, {
     debug: false
 });
+
+updateMessage("Connecting to peer server.");
 
 //establish WebSocket connection to server
 let socket = io({
@@ -20,12 +23,14 @@ const remoteVideo = document.getElementById('remoteVideo');
 
 //received peer client and working connection to peer server
 peer.on('open', function (id) {
-
+    updateMessage("Connected to peer server.");
     //emitting peer id to server
     socket.emit('new peer', id);
 
     //display peer id as background
     $('#key').text(id);
+
+    search();
 });
 
 //someone tries to connect to you
@@ -49,6 +54,7 @@ peer.on('connection', function(conn) {
     //if connection closed
     conn.on('close', function() {
         connectionClosed();
+        search();
     });
 
     //if error occured
@@ -59,7 +65,7 @@ peer.on('connection', function(conn) {
 
 //someone tries to call you
 peer.on('call', function(call) {
-    console.log('someone tries to call you');
+    updateMessage("Someone found you.");
     navigator.getUserMedia({video: true, audio: false}, function(stream) {
 
         call.answer(stream);
@@ -75,8 +81,10 @@ peer.on('call', function(call) {
 });
 
 peer.on('error', function(err) {
-    console.log(err);
-    dataConnection = null;
+    updateMessage("Peer error. Please refresh page!");
+    peer = new Peer(null, {
+        debug: false
+    });
 });
 
 //server tells who to connect to by passing client
@@ -111,6 +119,7 @@ socket.on('establishConnection', function(client) {
     dataConnection.on('error', function(err) {
         console.log(err);
         dataConnection = null;
+        search();
     });
 });
 
@@ -129,27 +138,27 @@ socket.on('hud update', function(hud) {
 
 //change gui due to connection closed
 function connectionClosed() {
+    updateMessage("Connection closed.");
     document.getElementById('triangle').style = "clip-path: polygon(90% 0%, 20% 100%, 100% 100%, 100% 0%); backdrop-filter: blur(10px)";
-    document.getElementById('searchButton').style = "display: block;";
     document.getElementById('remoteVideo').style = "display: none;";
     document.getElementById('remoteCanvas').style = "display: none;";
 }
 
 //change gui due to connection established
 function connectionEstablished() {
+
+    updateMessage("Connection established.");
     document.getElementById('triangle').style = "clip-path: polygon(0% 0, 0% 100%, 100% 100%, 100% 0%); backdrop-filter: blur(15px)";
-    document.getElementById('searchButton').style = "display: none;";
-    document.getElementById('loader').style = "display: none";
     document.getElementById('remoteVideo').style = "display: flex;";
     document.getElementById('remoteCanvas').style = "display: flex;";
 }
 
 //client pressed search
 function search() {
+
+    updateMessage("Searching for other client...");
     //calls search function on socket server
     socket.emit('search', socket.id);
-
-    document.getElementById('loader').style = "display: block";
 }
 
 function mediaCall(client) {
@@ -163,15 +172,22 @@ function mediaCall(client) {
         });
 
         call.on('close', function() {
-            console.log('call closed');
+            updateMessage("Call ended.");
+            search();
         });
 
         call.on('error', function(err) {
+            updateMessage("Error occured.");
             console.log('dataConnection.on error');
             console.log(err);
+            search();
 
         });
     }, function(err) {
         console.log('Failed to get local stream' ,err);
     });
+}
+
+function updateMessage(input) {
+    $('#message').text(input);
 }

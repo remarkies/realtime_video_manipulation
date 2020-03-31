@@ -1,3 +1,5 @@
+let brightness = 10;
+
 let processor = {
     timerCallback: function() {
         if (this.video.paused || this.video.ended) {
@@ -16,14 +18,17 @@ let processor = {
         var video = document.getElementById('remoteVideo');
         let self = this;
         // set canvas size = video size when known
-        video.addEventListener('loadedmetadata', function() {
+        video.addEventListener('loadedmetadata', placeCanvas);
+        window.addEventListener('resize', placeCanvas);
+
+        function placeCanvas() {
             let ratio = video.videoWidth / video.videoHeight;
             this.width = canvas.width = window.innerWidth;
             this.height = canvas.height = window.innerWidth / ratio;
 
             canvas.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
             video.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
-        });
+        };
 
         video.addEventListener('play', function() {
             var $this = this; //cache
@@ -50,20 +55,25 @@ let processor = {
 
             let frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-            let l = frame.data.length / 4;
+            let pixels = frame.data.length / 4;
 
-            for (var i = 0; i < l; i++) {
-                var grey = (frame.data[i * 4 + 0] + frame.data[i * 4 + 1] + frame.data[i * 4 + 2]) / 3;
+            for (let i = 0; i < pixels; i++) {
 
-                frame.data[i * 4 + 0] = grey;
-                frame.data[i * 4 + 1] = grey;
-                frame.data[i * 4 + 2] = grey;
+                let rand = Math.floor(Math.random() * Math.floor(50));
+
+                let r = frame.data[i * 4 + 0];
+                let g = frame.data[i * 4 + 1];
+                let b = frame.data[i * 4 + 2];
+
+                let noise = 0.5 + (100 / (rand + 1));
+                let dif = brightness - ((r + g + b) / 3);
+
+                frame.data[i * 4 + 0] = (r + dif) * noise;
+                frame.data[i * 4 + 1] = (g + dif) * noise;
+                frame.data[i * 4 + 2] = (b + dif) * noise;
+
             }
-
-
             ctx.putImageData(frame, 0, 0);
         }
-
-        return;
     }
 };
