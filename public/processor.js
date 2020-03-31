@@ -1,5 +1,6 @@
 
 let brightness = 15;
+let isVideoMode = false;
 
 function updateBrightness(val) {
     brightness = val;
@@ -30,6 +31,7 @@ let processor = {
 
             (function loop() {
                 if (!$this.paused && !$this.ended) {
+                    isVideoMode = true;
 
                     ctx.drawImage($this, 0, 0, canvas.width, canvas.height);
 
@@ -38,6 +40,8 @@ let processor = {
 
                     // drawing at 60fps
                     setTimeout(loop, 1000 / 16);
+                } else {
+                    isVideoMode = false;
                 }
             })();
         }, 0);
@@ -47,19 +51,23 @@ let processor = {
         //place canvas right over video element
         function placeCanvas() {
 
-            //video proportions
-            let ratio = video.videoWidth / video.videoHeight;
-            canvas.width = window.innerWidth;
+            if(isVideoMode) {
+                console.log('place canvas');
+                //video proportions
+                let ratio = video.videoWidth / video.videoHeight;
+                canvas.width = window.innerWidth;
 
-            //calculate height of canvas
-            canvas.height = window.innerWidth / ratio;
+                //calculate height of canvas
+                canvas.height = window.innerWidth / ratio;
 
-            //display canvas in the middle of the screen
-            canvas.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
-            video.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
+                //display canvas in the middle of the screen
+                canvas.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
+                video.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
+            }
         };
     },
     computeFrame: function() {
+
 
         let canvas = document.getElementById('remoteCanvas');
 
