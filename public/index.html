@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Version 3.19</title>
+    <title>Version 3.20</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Major+Mono+Display&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="main.css">
@@ -16,6 +16,9 @@
     </div>
     <video id="remoteVideo"></video>
     <canvas id="remoteCanvas"></canvas>
+    <div id="slideContainer">
+        <input type="range" min="-50" max="100" value="15" class="slider" id="slider" oninput="updateBrightness(this.value)" onchange="updateBrightness(this.value)">
+    </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.1.0/anime.min.js" integrity="sha256-98Q574VkbV+PkxXCKSgL6jVq9mrVbS7uCdA+vt0sLS8=" crossorigin="anonymous"></script>

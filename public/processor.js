@@ -1,4 +1,9 @@
-let brightness = 10;
+
+let brightness = 15;
+
+function updateBrightness(val) {
+    brightness = val;
+}
 
 let processor = {
     timerCallback: function() {
@@ -6,45 +11,54 @@ let processor = {
             return;
         }
         this.computeFrame();
-        var self = this;
+        let self = this;
         setTimeout(function () {
             self.timerCallback();
         }, 16);
     },
-
     doLoad: function() {
-        var canvas = document.getElementById('remoteCanvas');
-        var ctx = canvas.getContext('2d');
-        var video = document.getElementById('remoteVideo');
+        let canvas = document.getElementById('remoteCanvas');
+        let ctx = canvas.getContext('2d');
+        let video = document.getElementById('remoteVideo');
         let self = this;
-        // set canvas size = video size when known
+
         video.addEventListener('loadedmetadata', placeCanvas);
-        window.addEventListener('resize', placeCanvas);
-
-        function placeCanvas() {
-            let ratio = video.videoWidth / video.videoHeight;
-            this.width = canvas.width = window.innerWidth;
-            this.height = canvas.height = window.innerWidth / ratio;
-
-            canvas.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
-            video.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
-        };
-
         video.addEventListener('play', function() {
-            var $this = this; //cache
+
+            //cache
+            let $this = this;
+
             (function loop() {
                 if (!$this.paused && !$this.ended) {
 
                     ctx.drawImage($this, 0, 0, canvas.width, canvas.height);
 
+                    //processing
                     self.computeFrame();
 
-                    setTimeout(loop, 1000 / 16); // drawing at 60fps
+                    // drawing at 60fps
+                    setTimeout(loop, 1000 / 16);
                 }
             })();
         }, 0);
-    },
 
+        window.addEventListener('resize', placeCanvas);
+
+        //place canvas right over video element
+        function placeCanvas() {
+
+            //video proportions
+            let ratio = video.videoWidth / video.videoHeight;
+            canvas.width = window.innerWidth;
+
+            //calculate height of canvas
+            canvas.height = window.innerWidth / ratio;
+
+            //display canvas in the middle of the screen
+            canvas.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
+            video.setAttribute("style", "top: " + (window.innerHeight - canvas.height) / 2 + "px; display: flex;");
+        };
+    },
     computeFrame: function() {
 
         let canvas = document.getElementById('remoteCanvas');
@@ -53,26 +67,33 @@ let processor = {
 
             let ctx = canvas.getContext('2d');
 
+            //take frame from canvas
             let frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
+            //pixel has 4 values (r,g,b,0)
             let pixels = frame.data.length / 4;
 
             for (let i = 0; i < pixels; i++) {
-
-                let rand = Math.floor(Math.random() * Math.floor(50));
-
                 let r = frame.data[i * 4 + 0];
                 let g = frame.data[i * 4 + 1];
                 let b = frame.data[i * 4 + 2];
 
-                let noise = 0.5 + (100 / (rand + 1));
+                //get random number between 0 & 5
+                let rand = Math.floor(Math.random() * Math.floor(5));
+
+                //noise strength to manipulate rgb-values
+                let noise = 0.5 + (10 / (rand + 1));
+
+                //difference to avg brightness
                 let dif = brightness - ((r + g + b) / 3);
 
+                //manipulate frame
                 frame.data[i * 4 + 0] = (r + dif) * noise;
                 frame.data[i * 4 + 1] = (g + dif) * noise;
                 frame.data[i * 4 + 2] = (b + dif) * noise;
-
             }
+
+            //update frame on canvas
             ctx.putImageData(frame, 0, 0);
         }
     }

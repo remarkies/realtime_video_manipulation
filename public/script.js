@@ -142,6 +142,7 @@ function connectionClosed() {
     document.getElementById('triangle').style = "clip-path: polygon(90% 0%, 20% 100%, 100% 100%, 100% 0%); backdrop-filter: blur(10px)";
     document.getElementById('remoteVideo').style = "display: none;";
     document.getElementById('remoteCanvas').style = "display: none;";
+    document.getElementById('slideContainer').style = "display: none;";
 }
 
 //change gui due to connection established
@@ -151,6 +152,8 @@ function connectionEstablished() {
     document.getElementById('triangle').style = "clip-path: polygon(0% 0, 0% 100%, 100% 100%, 100% 0%); backdrop-filter: blur(15px)";
     document.getElementById('remoteVideo').style = "display: flex;";
     document.getElementById('remoteCanvas').style = "display: flex;";
+    document.getElementById('slideContainer').style = "display: flex;";
+
 }
 
 //client pressed search
