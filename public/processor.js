@@ -2,6 +2,7 @@
 let brightness = 15;
 let isVideoMode = false;
 
+//function for hud input range
 function updateBrightness(val) {
     brightness = val;
 }

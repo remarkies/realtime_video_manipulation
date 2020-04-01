@@ -123,19 +123,6 @@ socket.on('establishConnection', function(client) {
     });
 });
 
-//gui update triggered by server
-socket.on('hud update', function(hud) {
-
-    //hud element 1
-    $('#activeUsers').text('Active users: ' + hud.activeUsers);
-
-    //hud element 2
-    $('#searchingUsers').text('Searching users: ' + hud.searchingUsers);
-
-    //hud element 3
-    $('#serverVersion').text('Server version: ' + hud.serverVersion);
-});
-
 //change gui due to connection closed
 function connectionClosed() {
     updateMessage("Connection closed.");
@@ -164,6 +151,7 @@ function search() {
     socket.emit('search', socket.id);
 }
 
+//call other client with peerId
 function mediaCall(client) {
     navigator.getUserMedia({video: true, audio: false}, function(stream) {
 
