@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="luka-kramer.ch" id="1b42f74b-348f-428b-a692-e33dcc4d9214" keyPath="$USER_HOME$/.ssh/id_rsa" port="22" customName="serverli" nameFormat="CUSTOM" username="luc" />
+    </configs>
+  </component>
+</project>
